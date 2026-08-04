@@ -8,7 +8,12 @@ version = "0.1.0"
 description = "telegram userbot"
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = []
+dependencies = [
+    "pydantic",
+    "pydantic-settings",
+    "telethon",
+    "qrcode"
+]
 
 [project.optional-dependencies]
 dev = [
