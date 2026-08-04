@@ -59,3 +59,30 @@ Retrieves and displays the host machine's system specs (OS, Kernel, CPU, RAM, Ba
 **Usage:**
 - Type exactly `fastfetch` (no dot prefix).
 - This command is accessible to **anyone** (if another user types it, your bot will reply with the stats).
+
+### `.type`
+Ghost typing! The bot will edit the message sequentially to look like the text is being typed out in real-time.
+
+**Usage:**
+- `.type <message>`: Animates the typing of `<message>`.
+
+### `.bomb`
+Self-destructing messages. Sends a message that deletes itself after a specified number of seconds.
+
+**Usage:**
+- `.bomb <seconds> <message>`: Shows `⏳ <message>` and deletes it for everyone when the timer runs out.
+
+### `.tr`
+Auto-translator. Translates any message into the language of your choice.
+
+**Usage:**
+- Reply to any text message with `.tr <lang_code>` (e.g., `.tr en`, `.tr ru`, `.tr fr`). The bot automatically detects the source language and edits your message to show the translation.
+
+### `.quote`
+Quote generator. Turns any message into a beautiful sticker quote.
+
+**Usage:**
+- Reply to a message with `.quote`. The bot will secretly fetch a sticker from `@QuotLyBot` and reply with it, making you look like a pro.
+
+### Hidden Features
+- **Auto-Reactor**: If any message contains the number `107`, the bot will automatically react to it with a 👍.
