@@ -5,12 +5,15 @@ from telethon import events, TelegramClient
 from telethon.errors.rpcerrorlist import MessageNotModifiedError
 
 def setup(client: TelegramClient):
-    @client.on(events.NewMessage(outgoing=True, pattern=r'(?i)^\.q(?:\s+(.+))?$'))
+    @client.on(events.NewMessage(pattern=r'(?i)^\.q(?:\s+(.+))?$'))
     async def q_handler(event):
         try:
             question = event.pattern_match.group(1)
             if not question:
-                await event.edit("Please ask a question! (e.g., `.q Am I lucky today?`)")
+                if event.out:
+                    await event.edit("Please ask a question! (e.g., `.q Am I lucky today?`)")
+                else:
+                    await event.reply("Please ask a question! (e.g., `.q Am I lucky today?`)")
                 return
                 
             # Detect if the question contains any Cyrillic (Russian) characters
@@ -45,20 +48,29 @@ def setup(client: TelegramClient):
                 
             final_answer = random.choice(answers)
             
+            # If we sent the message, we can edit it directly. If someone else sent it, we must reply.
+            if event.out:
+                msg = event
+            else:
+                msg = await event.reply("🔮...")
+            
             # Run the beautiful animation
             for frame in frames:
                 try:
-                    await event.edit(f"❓ **{q_text}:** {question}\n\n{frame}")
+                    await msg.edit(f"❓ **{q_text}:** {question}\n\n{frame}")
                     await asyncio.sleep(0.5)
                 except MessageNotModifiedError:
                     continue
                     
             # Set the final result
-            await event.edit(f"❓ **{q_text}:** {question}\n\n🎱 **{a_text}:** {final_answer}")
+            await msg.edit(f"❓ **{q_text}:** {question}\n\n🎱 **{a_text}:** {final_answer}")
             
         except Exception as e:
             print(f"Q command error: {e}")
             try:
-                await event.edit(f"❌ Error: {e}")
+                if event.out:
+                    await event.edit(f"❌ Error: {e}")
+                else:
+                    await event.reply(f"❌ Error: {e}")
             except:
                 pass
