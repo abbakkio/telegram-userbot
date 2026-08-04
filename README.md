@@ -90,5 +90,12 @@ Voice note transcriber. Converts voice messages to text.
 **Usage:**
 - Reply to any voice note with `.voice`. The bot will download the audio, transcribe it to text locally, and reply with the transcript.
 
+### `.roll`
+Random number generator with a cool casino-style slot machine animation.
+
+**Usage:**
+- `.roll`: Drops a random number between 1 and 100.
+- `.roll <min>-<max>`: Drops a random number between your chosen range (e.g., `.roll 5-1993`).
+
 ### Hidden Features
 - **Auto-Reactor**: If any message contains the number `107`, the bot will automatically react to it with a 👍.

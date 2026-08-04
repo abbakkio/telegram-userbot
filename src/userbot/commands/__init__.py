@@ -7,6 +7,7 @@ from .bomb import setup as setup_bomb
 from .translator import setup as setup_translator
 from .quoter import setup as setup_quoter
 from .voice import setup as setup_voice
+from .roll import setup as setup_roll
 
 def setup_all(client: TelegramClient):
     setup_spam(client)
@@ -17,3 +18,4 @@ def setup_all(client: TelegramClient):
     setup_translator(client)
     setup_quoter(client)
     setup_voice(client)
+    setup_roll(client)
