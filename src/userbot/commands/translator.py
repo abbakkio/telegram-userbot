@@ -22,8 +22,13 @@ def setup(client: TelegramClient):
             else:
                 msg = await event.reply("Translating...")
             
-            # Translate using deep-translator
-            translated = GoogleTranslator(source='auto', target=target_lang).translate(reply_msg.text)
+            import asyncio
+            
+            # Translate using deep-translator without blocking the bot's event loop
+            def do_translation():
+                return GoogleTranslator(source='auto', target=target_lang).translate(reply_msg.text)
+                
+            translated = await asyncio.to_thread(do_translation)
             
             # Edit our message with the translation
             await msg.edit(f"**Translated to {target_lang}:**\n{translated}")

@@ -32,7 +32,8 @@ def setup(client: TelegramClient):
                     should_react = True
                 else:
                     # Look for math expressions like 87+20, (1000-7)-886
-                    matches = re.findall(r"(?:[0-9]+|\()[0-9\+\-\*\/\(\)\s]+[0-9\)]+", event.raw_text)
+                    # Optimized regex to prevent catastrophic backtracking on long numbers
+                    matches = re.findall(r"[\d\(\)]+(?:\s*[+\-*/]\s*[\d\(\)]+)+", event.raw_text)
                     for match in matches:
                         try:
                             # Safe to eval because regex only matched digits and basic operators
