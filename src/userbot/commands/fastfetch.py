@@ -10,9 +10,9 @@ def setup(client: TelegramClient):
     @client.on(events.NewMessage(pattern=r'(?i)^fastfetch$'))
     async def fastfetch_handler(event):
         try:
-            # Run the fastfetch command
+            # Run the fastfetch command with absolute path since launchd doesn't have homebrew in PATH
             process = await asyncio.create_subprocess_shell(
-                'fastfetch --logo none -s os:host:kernel:uptime:shell:cpu:gpu:memory:disk:battery',
+                '/opt/homebrew/bin/fastfetch --logo none -s os:host:kernel:uptime:shell:cpu:gpu:memory:disk:battery',
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE
             )

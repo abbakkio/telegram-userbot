@@ -19,6 +19,15 @@ pip install -r requirements.txt # or equivalent
 python3 main.py
 ```
 
+### macOS Background Autostart
+You can configure the bot to start automatically in the background every time you log in to your Mac. If your session expires while running in the background, it will automatically open an `iTerm` window for you to scan the QR code.
+
+To enable autostart, run the included script:
+```bash
+./install_autostart.sh
+```
+*Note: Your bot's background logs will be saved to `userbot.log` in this directory.*
+
 ## Commands
 
 ### `.spam`

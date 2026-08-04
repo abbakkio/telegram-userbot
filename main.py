@@ -1,3 +1,4 @@
+import os
 import sys
 import asyncio
 import subprocess
@@ -14,11 +15,29 @@ async def main():
         print("Not logged in. Triggering login.py...")
         await client.disconnect()
         
-        # Trigger login.py as a separate process
-        subprocess.run([sys.executable, "login.py"])
+        if sys.stdout.isatty():
+            # Trigger login.py directly if running in a terminal
+            subprocess.run([sys.executable, "login.py"])
+        else:
+            # Running in background. Open iTerm to show QR code.
+            login_cmd_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "run_login.command")
+            with open(login_cmd_path, "w") as f:
+                f.write(f"#!/bin/bash\ncd \"{os.path.dirname(os.path.abspath(__file__))}\"\n\"{sys.executable}\" login.py\n")
+            os.chmod(login_cmd_path, 0o755)
+            
+            subprocess.run(["open", "-a", "iTerm", login_cmd_path])
+            
+            print("Waiting for login via iTerm...")
+            while True:
+                await asyncio.sleep(5)
+                await client.connect()
+                if await client.is_user_authorized():
+                    break
+                await client.disconnect()
         
-        # Re-connect to check if login was successful
-        await client.connect()
+        # Re-connect to ensure state is completely valid
+        if not client.is_connected():
+            await client.connect()
         if not await client.is_user_authorized():
             print("Login failed or was cancelled.")
             return
