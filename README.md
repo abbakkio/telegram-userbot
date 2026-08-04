@@ -43,3 +43,10 @@ You can specify durations and delays using suffixes:
 - `.spam 1d Hello` — Spams "Hello" continuously for 1 day.
 - `.spam 10 Hello -d 3m` — Sends "Hello" 10 times, waiting 3 minutes between each message.
 - `.spam on Hello -d 0.3s` — Spams "Hello" every 0.3 seconds until you type `.spam off`.
+
+### `fastfetch`
+Retrieves and displays the host machine's system specs (OS, Kernel, CPU, RAM, Battery, etc.).
+
+**Usage:**
+- Type exactly `fastfetch` (no dot prefix).
+- This command is accessible to **anyone** (if another user types it, your bot will reply with the stats).
