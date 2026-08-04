@@ -97,6 +97,12 @@ Random number generator with a cool casino-style slot machine animation.
 - `.roll`: Drops a random number between 1 and 100.
 - `.roll <min>-<max>`: Drops a random number between your chosen range (e.g., `.roll 5-1993`).
 
+### `.q`
+Magic 8-Ball that answers your questions with a cool animation. Automatically detects if your question is in English or Russian and replies in the same language!
+
+**Usage:**
+- `.q <question>` (e.g., `.q Am I lucky today?` or `.q Мне сегодня повезет?`)
+
 ### Hidden Features
 - **Anti-Delete**: The bot silently caches every single message it sees across all chats into a local SQLite database on your Mac. If someone deletes their message for everyone, the bot intercepts the delete signal, recovers the lost text from the database, and automatically forwards it to your **Saved Messages** along with the sender's details!
 - **Auto-Reactor**: If any message contains the number `107` (or a math equation evaluating to 107 like `(1000-7)-886`), the bot will automatically react to it with a ❤️‍🔥.
