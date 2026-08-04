@@ -84,5 +84,11 @@ Quote generator. Turns any message into a beautiful sticker quote.
 **Usage:**
 - Reply to a message with `.quote`. The bot will secretly fetch a sticker from `@QuotLyBot` and reply with it, making you look like a pro.
 
+### `.voice`
+Voice note transcriber. Converts voice messages to text.
+
+**Usage:**
+- Reply to any voice note with `.voice`. The bot will download the audio, transcribe it to text locally, and reply with the transcript.
+
 ### Hidden Features
 - **Auto-Reactor**: If any message contains the number `107`, the bot will automatically react to it with a 👍.

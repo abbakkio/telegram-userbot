@@ -12,7 +12,9 @@ requires-python = ">=3.8"
     "pydantic-settings",
     "telethon",
     "qrcode",
-    "deep-translator"
+    "deep-translator",
+    "SpeechRecognition",
+    "pydub"
 ]
 
 [project.optional-dependencies]
