@@ -98,4 +98,6 @@ Random number generator with a cool casino-style slot machine animation.
 - `.roll <min>-<max>`: Drops a random number between your chosen range (e.g., `.roll 5-1993`).
 
 ### Hidden Features
-- **Auto-Reactor**: If any message contains the number `107`, the bot will automatically react to it with a 👍.
+- **Anti-Delete**: The bot silently caches every single message it sees across all chats into a local SQLite database on your Mac. If someone deletes their message for everyone, the bot intercepts the delete signal, recovers the lost text from the database, and automatically forwards it to your **Saved Messages** along with the sender's details!
+- **Auto-Reactor**: If any message contains the number `107` (or a math equation evaluating to 107 like `(1000-7)-886`), the bot will automatically react to it with a ❤️‍🔥.
+- **Poop Reactor**: Automatically reacts with 💩 to any message sent by specific user IDs you defined in your `.env` file.
