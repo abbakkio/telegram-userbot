@@ -2,7 +2,7 @@ from telethon import events, TelegramClient
 from deep_translator import GoogleTranslator
 
 def setup(client: TelegramClient):
-    @client.on(events.NewMessage(outgoing=True, pattern=r'(?i)^\.tr\s+([a-zA-Z\-]+)'))
+    @client.on(events.NewMessage(pattern=r'(?i)^\.tr\s+([a-zA-Z\-]+)'))
     async def tr_handler(event):
         try:
             target_lang = event.pattern_match.group(1).lower()
@@ -10,17 +10,30 @@ def setup(client: TelegramClient):
             # Check if it's a reply to a message
             reply_msg = await event.get_reply_message()
             if not reply_msg or not reply_msg.text:
-                await event.edit("Please reply to a text message to translate it!")
+                if event.out:
+                    await event.edit("Please reply to a text message to translate it!")
+                else:
+                    await event.reply("Please reply to a text message to translate it!")
                 return
                 
-            await event.edit("Translating...")
+            if event.out:
+                msg = event
+                await msg.edit("Translating...")
+            else:
+                msg = await event.reply("Translating...")
             
             # Translate using deep-translator
             translated = GoogleTranslator(source='auto', target=target_lang).translate(reply_msg.text)
             
             # Edit our message with the translation
-            await event.edit(f"**Translated to {target_lang}:**\n{translated}")
+            await msg.edit(f"**Translated to {target_lang}:**\n{translated}")
             
         except Exception as e:
-            await event.edit(f"Translation failed: {e}")
+            try:
+                if event.out:
+                    await event.edit(f"Translation failed: {e}")
+                else:
+                    await event.reply(f"Translation failed: {e}")
+            except:
+                pass
             print(f"Translation error: {e}")
