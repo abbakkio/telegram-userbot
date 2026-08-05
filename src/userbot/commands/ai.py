@@ -33,26 +33,32 @@ def setup(client: TelegramClient):
                     if 'message' in chunk and 'content' in chunk['message']:
                         response_text += chunk['message']['content']
                     
-                        # Throttle Telegram edits to once every 3 seconds to avoid FloodWait errors
+                        # Throttle Telegram edits to once every 4 seconds to avoid FloodWait errors
                         current_time = asyncio.get_event_loop().time()
-                        if current_time - last_edit_time > 3.0:
+                        if current_time - last_edit_time > 4.0:
                             try:
-                                await msg.edit(f"🤖 **Llama 3.1:** {response_text} ✍️")
+                                await msg.edit(f"🤖 **Llama 3.1:** {response_text[:4000]} ✍️")
                                 last_edit_time = current_time
                             except errors.MessageNotModifiedError:
                                 pass
                             except errors.FloodWaitError as e:
-                                print(f"Sleeping for {e.seconds}s due to FloodWaitError...")
-                                await asyncio.sleep(e.seconds)
-                                last_edit_time = asyncio.get_event_loop().time()
+                                print(f"FloodWait for {e.seconds}s. Stopping live edits.")
+                                last_edit_time = current_time + 999999  # Stop editing for the rest of this generation
+                            except Exception:
+                                pass
                             
-                # Final edit to remove the typing cursor
+                # Final output
                 if response_text.strip():
+                    # If it's too long, just send the first 4000 chars. 
+                    final_text = response_text[:4000]
+                    if len(response_text) > 4000:
+                        final_text += "\n\n*(Message truncated due to Telegram limits)*"
+                        
                     try:
-                        await msg.edit(f"🤖 **Llama 3.1:** {response_text}")
+                        await msg.edit(f"🤖 **Llama 3.1:** {final_text}")
                     except errors.FloodWaitError as e:
-                        await asyncio.sleep(e.seconds)
-                        await msg.edit(f"🤖 **Llama 3.1:** {response_text}")
+                        # If we still can't edit, reply with the final result instead
+                        await msg.reply(f"🤖 **Llama 3.1 (Final):**\n\n{final_text}")
                 else:
                     await msg.edit("🤖 **Llama 3.1:** (Empty response)")
                 
