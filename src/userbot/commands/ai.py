@@ -29,18 +29,24 @@ def setup(client: TelegramClient):
                     stream=True
                 )
                 
+from telethon import errors
+
                 async for chunk in response_stream:
                     if 'message' in chunk and 'content' in chunk['message']:
                         response_text += chunk['message']['content']
                     
-                        # Throttle Telegram edits to once every 1.5 seconds to avoid FloodWait errors
+                        # Throttle Telegram edits to once every 3 seconds to avoid FloodWait errors
                         current_time = asyncio.get_event_loop().time()
-                        if current_time - last_edit_time > 1.5:
+                        if current_time - last_edit_time > 3.0:
                             try:
                                 await msg.edit(f"🤖 **Llama 3.1:** {response_text} ✍️")
                                 last_edit_time = current_time
-                            except MessageNotModifiedError:
+                            except errors.MessageNotModifiedError:
                                 pass
+                            except errors.FloodWaitError as e:
+                                print(f"Sleeping for {e.seconds}s due to FloodWaitError...")
+                                await asyncio.sleep(e.seconds)
+                                last_edit_time = asyncio.get_event_loop().time()
                             
                 # Final edit to remove the typing cursor
                 if response_text.strip():
