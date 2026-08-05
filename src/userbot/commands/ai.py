@@ -33,8 +33,8 @@ def setup(client: TelegramClient):
             last_edit_time = asyncio.get_event_loop().time()
             
             try:
-                # Use Gemini 1.5 Flash (super fast and efficient)
-                model = genai.GenerativeModel('gemini-1.5-flash')
+                # Use the latest Gemini Flash model to prevent version deprecation errors
+                model = genai.GenerativeModel('gemini-flash-latest')
                 
                 # Run the blocking network call in a separate thread so it doesn't freeze the bot
                 def fetch_stream():
@@ -50,7 +50,7 @@ def setup(client: TelegramClient):
                         current_time = asyncio.get_event_loop().time()
                         if current_time - last_edit_time > 4.0:
                             try:
-                                await msg.edit(f"🤖 **Gemini 1.5:** {response_text[:4000]} ✍️")
+                                await msg.edit(f"🤖 **Gemini Flash:** {response_text[:4000]} ✍️")
                                 last_edit_time = current_time
                             except errors.MessageNotModifiedError:
                                 pass
@@ -68,12 +68,12 @@ def setup(client: TelegramClient):
                         final_text += "\n\n*(Message truncated due to Telegram limits)*"
                         
                     try:
-                        await msg.edit(f"🤖 **Gemini 1.5:** {final_text}")
+                        await msg.edit(f"🤖 **Gemini Flash:** {final_text}")
                     except errors.FloodWaitError as e:
                         # If we still can't edit, reply with the final result instead
-                        await msg.reply(f"🤖 **Gemini 1.5 (Final):**\n\n{final_text}")
+                        await msg.reply(f"🤖 **Gemini Flash (Final):**\n\n{final_text}")
                 else:
-                    await msg.edit("🤖 **Gemini 1.5:** (Empty response)")
+                    await msg.edit("🤖 **Gemini Flash:** (Empty response)")
                 
             except Exception as e:
                 error_msg = str(e).lower()
