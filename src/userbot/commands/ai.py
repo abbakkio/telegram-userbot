@@ -1,8 +1,13 @@
 import asyncio
 import traceback
+import google.generativeai as genai
 from telethon import events, TelegramClient, errors
-from telethon.errors.rpcerrorlist import MessageNotModifiedError
-from ollama import AsyncClient
+
+from ..core.config import settings
+
+# Configure Gemini with the API Key
+if settings.gemini_api_key:
+    genai.configure(api_key=settings.gemini_api_key)
 
 def setup(client: TelegramClient):
     @client.on(events.NewMessage(pattern=r'(?i)^\.ai\s+(.+)'))
@@ -10,34 +15,42 @@ def setup(client: TelegramClient):
         try:
             prompt = event.pattern_match.group(1)
             
+            if not settings.gemini_api_key:
+                if event.out:
+                    await event.edit("❌ **AI Error**: Please add `GEMINI_API_KEY` to your `.env` file!")
+                else:
+                    await event.reply("❌ **AI Error**: Please add `GEMINI_API_KEY` to your `.env` file!")
+                return
+            
             # If the user sent the command, edit it. Otherwise, reply.
             if event.out:
                 msg = event
-                await msg.edit(f"🧠 **Thinking...**\n\n_Prompt: {prompt}_")
+                await msg.edit(f"🧠 **Thinking (Gemini)...**\n\n_Prompt: {prompt}_")
             else:
-                msg = await event.reply(f"🧠 **Thinking...**\n\n_Prompt: {prompt}_")
+                msg = await event.reply(f"🧠 **Thinking (Gemini)...**\n\n_Prompt: {prompt}_")
                 
-            ollama_client = AsyncClient()
             response_text = ""
             last_edit_time = asyncio.get_event_loop().time()
             
             try:
-                # Stream the response from the local Llama 3.1 model
-                response_stream = await ollama_client.chat(
-                    model='llama3.1',
-                    messages=[{'role': 'user', 'content': prompt}],
-                    stream=True
-                )
+                # Use Gemini 1.5 Flash (super fast and efficient)
+                model = genai.GenerativeModel('gemini-1.5-flash')
                 
-                async for chunk in response_stream:
-                    if 'message' in chunk and 'content' in chunk['message']:
-                        response_text += chunk['message']['content']
+                # Run the blocking network call in a separate thread so it doesn't freeze the bot
+                def fetch_stream():
+                    return model.generate_content(prompt, stream=True)
+                    
+                response_stream = await asyncio.to_thread(fetch_stream)
+                
+                for chunk in response_stream:
+                    if chunk.text:
+                        response_text += chunk.text
                     
                         # Throttle Telegram edits to once every 4 seconds to avoid FloodWait errors
                         current_time = asyncio.get_event_loop().time()
                         if current_time - last_edit_time > 4.0:
                             try:
-                                await msg.edit(f"🤖 **Llama 3.1:** {response_text[:4000]} ✍️")
+                                await msg.edit(f"🤖 **Gemini 1.5:** {response_text[:4000]} ✍️")
                                 last_edit_time = current_time
                             except errors.MessageNotModifiedError:
                                 pass
@@ -55,19 +68,17 @@ def setup(client: TelegramClient):
                         final_text += "\n\n*(Message truncated due to Telegram limits)*"
                         
                     try:
-                        await msg.edit(f"🤖 **Llama 3.1:** {final_text}")
+                        await msg.edit(f"🤖 **Gemini 1.5:** {final_text}")
                     except errors.FloodWaitError as e:
                         # If we still can't edit, reply with the final result instead
-                        await msg.reply(f"🤖 **Llama 3.1 (Final):**\n\n{final_text}")
+                        await msg.reply(f"🤖 **Gemini 1.5 (Final):**\n\n{final_text}")
                 else:
-                    await msg.edit("🤖 **Llama 3.1:** (Empty response)")
+                    await msg.edit("🤖 **Gemini 1.5:** (Empty response)")
                 
             except Exception as e:
                 error_msg = str(e).lower()
-                if "connection refused" in error_msg:
-                    await msg.edit("❌ **AI Error**: Ollama is not running in the background!")
-                elif "not found" in error_msg:
-                    await msg.edit("❌ **AI Error**: Llama 3.1 model is not downloaded yet! Please wait for the download to finish.")
+                if "api_key" in error_msg or "authentication" in error_msg:
+                    await msg.edit("❌ **AI Error**: Invalid Gemini API Key!")
                 else:
                     await msg.edit(f"❌ **AI Error**: {e}")
                 

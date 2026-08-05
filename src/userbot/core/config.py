@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     phone_number: str
     password: str
     poop_user_ids: str = ""
+    gemini_api_key: str = ""
     
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

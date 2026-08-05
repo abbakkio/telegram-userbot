@@ -104,7 +104,7 @@ Magic 8-Ball that answers your questions with a cool animation. Automatically de
 - `.q <question>` (e.g., `.q Am I lucky today?` or `.q Мне сегодня повезет?`)
 
 ### `.ai`
-A powerful Local LLM (Llama 3.1) running natively on your Mac. Ask it any complex question and watch it stream the answer into the chat word-by-word. Works completely offline!
+A powerful AI assistant powered by Google's **Gemini 1.5**. Ask it any complex question and watch it stream the answer into the chat word-by-word just like ChatGPT.
 
 **Usage:**
 - `.ai <prompt>` (e.g., `.ai Write a poem about telegram bots`)
