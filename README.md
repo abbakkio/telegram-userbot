@@ -103,6 +103,12 @@ Magic 8-Ball that answers your questions with a cool animation. Automatically de
 **Usage:**
 - `.q <question>` (e.g., `.q Am I lucky today?` or `.q Мне сегодня повезет?`)
 
+### `.ai`
+A powerful Local LLM (Llama 3.1) running natively on your Mac. Ask it any complex question and watch it stream the answer into the chat word-by-word. Works completely offline!
+
+**Usage:**
+- `.ai <prompt>` (e.g., `.ai Write a poem about telegram bots`)
+
 ### Hidden Features
 - **Anti-Delete**: The bot silently caches every single message it sees across all chats into a local SQLite database on your Mac. If someone deletes their message for everyone, the bot intercepts the delete signal, recovers the lost text from the database, and automatically forwards it to your **Saved Messages** along with the sender's details!
 - **Auto-Reactor**: If any message contains the number `107` (or a math equation evaluating to 107 like `(1000-7)-886`), the bot will automatically react to it with a ❤️‍🔥.

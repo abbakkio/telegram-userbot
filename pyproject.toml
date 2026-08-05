@@ -15,7 +15,8 @@ requires-python = ">=3.8"
     "deep-translator",
     "SpeechRecognition",
     "pydub",
-    "faster-whisper"
+    "faster-whisper",
+    "ollama"
 ]
 
 [project.optional-dependencies]
