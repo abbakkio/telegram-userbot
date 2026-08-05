@@ -1,6 +1,6 @@
 import asyncio
 import traceback
-from telethon import events, TelegramClient
+from telethon import events, TelegramClient, errors
 from telethon.errors.rpcerrorlist import MessageNotModifiedError
 from ollama import AsyncClient
 
@@ -29,8 +29,6 @@ def setup(client: TelegramClient):
                     stream=True
                 )
                 
-from telethon import errors
-
                 async for chunk in response_stream:
                     if 'message' in chunk and 'content' in chunk['message']:
                         response_text += chunk['message']['content']
@@ -50,7 +48,11 @@ from telethon import errors
                             
                 # Final edit to remove the typing cursor
                 if response_text.strip():
-                    await msg.edit(f"🤖 **Llama 3.1:** {response_text}")
+                    try:
+                        await msg.edit(f"🤖 **Llama 3.1:** {response_text}")
+                    except errors.FloodWaitError as e:
+                        await asyncio.sleep(e.seconds)
+                        await msg.edit(f"🤖 **Llama 3.1:** {response_text}")
                 else:
                     await msg.edit("🤖 **Llama 3.1:** (Empty response)")
                 
