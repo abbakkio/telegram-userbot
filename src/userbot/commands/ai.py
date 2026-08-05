@@ -33,8 +33,15 @@ def setup(client: TelegramClient):
             last_edit_time = asyncio.get_event_loop().time()
             
             try:
-                # Use the latest Gemini Flash model to prevent version deprecation errors
-                model = genai.GenerativeModel('gemini-flash-latest')
+                # Use the latest Gemini Flash model and give it a strict persona to avoid markdown
+                system_prompt = (
+                    "You are a helpful AI assistant operating directly inside a Telegram chat. "
+                    "CRITICAL RULES: "
+                    "1. Keep your answers concise and short. Do not write essays. "
+                    "2. NEVER use any Markdown formatting (no asterisks **, no headers ###, no blockquotes >). "
+                    "3. Speak naturally like a real person texting in a chat."
+                )
+                model = genai.GenerativeModel('gemini-flash-latest', system_instruction=system_prompt)
                 
                 # Run the blocking network call in a separate thread so it doesn't freeze the bot
                 def fetch_stream():
