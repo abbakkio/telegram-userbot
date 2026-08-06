@@ -4,18 +4,24 @@ A modular Telegram userbot built with Telethon.
 
 ## Setup
 
-1. Create a `.env` file based on your credentials:
+1. Ensure you have `ffmpeg` installed on your system (required for voice transcription):
+```bash
+brew install ffmpeg
+```
+2. Create a `.env` file based on your credentials:
 ```env
 API_ID=your_api_id
 API_HASH=your_api_hash
 PHONE_NUMBER=your_phone_number
 PASSWORD=your_2fa_password
+GEMINI_API_KEY=your_gemini_api_key_here
+POOP_USER_IDS=comma_separated_user_ids
 ```
-2. Install dependencies and run:
+3. Install dependencies and run:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt # or equivalent
+pip install .
 python3 main.py
 ```
 
@@ -89,6 +95,7 @@ Voice note transcriber. Converts voice messages to text.
 
 **Usage:**
 - Reply to any voice note with `.voice`. The bot will download the audio, transcribe it to text locally, and reply with the transcript.
+- Reply with `.voice <lang>` (e.g., `.voice en`) to explicitly set the language for Whisper AI.
 
 ### `.roll`
 Random number generator with a cool casino-style slot machine animation.
