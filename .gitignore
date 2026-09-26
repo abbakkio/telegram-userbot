@@ -30,3 +30,17 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Telegram Session & Local State
+*.session
+*.session-journal
+status_state.json
+
+# Databases & Logs
+*.db
+*.sqlite3
+*.log
+
+# OS & Scripts
+.DS_Store
+*.command
