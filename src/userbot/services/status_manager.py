@@ -151,10 +151,10 @@ class StatusManager:
             # Default to 4 hours (240 mins) if no explicit duration was provided
             duration_minutes = 240
 
-        # Construct new last name
-        base_last_name = settings.base_last_name or "Madiyev"
+        # Construct new last name directly from BASE_LAST_NAME in .env
+        base_last_name = (settings.base_last_name if settings.base_last_name is not None else "").strip()
         if suffix:
-            new_last_name = f"{base_last_name} {suffix}"
+            new_last_name = f"{base_last_name} {suffix}".strip()
         else:
             new_last_name = base_last_name
 
