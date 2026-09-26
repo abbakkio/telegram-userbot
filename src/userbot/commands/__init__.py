@@ -8,9 +8,10 @@ from .translator import setup as setup_translator
 from .quoter import setup as setup_quoter
 from .voice import setup as setup_voice
 from .roll import setup as setup_roll
-from .anti_delete import setup as setup_anti_delete
 from .q import setup as setup_q
 from .ai import setup as setup_ai
+from .clear import setup as setup_clear
+from .status import setup as setup_status
 
 def setup_all(client: TelegramClient):
     setup_spam(client)
@@ -22,6 +23,7 @@ def setup_all(client: TelegramClient):
     setup_quoter(client)
     setup_voice(client)
     setup_roll(client)
-    setup_anti_delete(client)
     setup_q(client)
     setup_ai(client)
+    setup_clear(client)
+    setup_status(client)

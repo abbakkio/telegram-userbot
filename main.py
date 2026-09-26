@@ -5,6 +5,7 @@ import subprocess
 from telethon import TelegramClient, events
 from src.userbot.core.config import settings
 from src.userbot.commands import setup_all
+from src.userbot.services.status_manager import status_manager
 
 async def main():
     client = TelegramClient('session_qr', settings.api_id, settings.api_hash)
@@ -46,6 +47,7 @@ async def main():
     
     # Initialize all command handlers
     setup_all(client)
+    await status_manager.initialize(client)
     
     # Run the client until disconnected
     await client.run_until_disconnected()
