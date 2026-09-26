@@ -15,9 +15,13 @@ logger = logging.getLogger(__name__)
 STATUS_CONFIG = {
     "work": {"state": "working", "emoji": "👨‍💻", "label": "Working", "surname_suffix": "[👨‍💻 Working]"},
     "working": {"state": "working", "emoji": "👨‍💻", "label": "Working", "surname_suffix": "[👨‍💻 Working]"},
+    "цщкл": {"state": "working", "emoji": "👨‍💻", "label": "Working", "surname_suffix": "[👨‍💻 Working]"},
     "studying": {"state": "studying", "emoji": "📚", "label": "Studying", "surname_suffix": "[📚 Studying]"},
     "study": {"state": "studying", "emoji": "📚", "label": "Studying", "surname_suffix": "[📚 Studying]"},
+    "ыегвн": {"state": "studying", "emoji": "📚", "label": "Studying", "surname_suffix": "[📚 Studying]"},
+    "ыегвнштп": {"state": "studying", "emoji": "📚", "label": "Studying", "surname_suffix": "[📚 Studying]"},
     "free": {"state": "free", "emoji": None, "label": "Free", "surname_suffix": ""},
+    "арук": {"state": "free", "emoji": None, "label": "Free", "surname_suffix": ""},
 }
 
 STATE_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))), "status_state.json")

@@ -3,7 +3,7 @@ from telethon import events, TelegramClient
 from src.userbot.services.status_manager import status_manager
 
 def setup(client: TelegramClient):
-    @client.on(events.NewMessage(outgoing=True, pattern=r"(?i)^[./](work|working|studying|study|free)(?:\s+(.+))?$"))
+    @client.on(events.NewMessage(outgoing=True, pattern=r"(?i)^[./](work|working|studying|study|free|цщкл|ыегвн|ыегвнштп|арук)(?:\s+(.+))?$"))
     async def status_handler(event):
         command = event.pattern_match.group(1).lower()
         duration_arg = event.pattern_match.group(2)
@@ -19,7 +19,7 @@ def setup(client: TelegramClient):
 
         try:
             if success:
-                icon = "👨‍💻" if command in ("work", "working") else ("📚" if command in ("studying", "study") else "✨")
+                icon = "👨‍💻" if command in ("work", "working", "цщкл") else ("📚" if command in ("studying", "study", "ыегвн", "ыегвнштп") else "✨")
                 await event.edit(f"{icon} {message}")
             else:
                 await event.edit(f"⚠️ {message}")
