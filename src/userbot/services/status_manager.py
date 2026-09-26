@@ -145,11 +145,8 @@ class StatusManager:
         label = config["label"]
         suffix = config["surname_suffix"]
 
-        # Parse duration
+        # Parse duration (None by default so status stays active until manual /free)
         duration_minutes = parse_duration(duration_str)
-        if state != "free" and duration_minutes is None:
-            # Default to 4 hours (240 mins) if no explicit duration was provided
-            duration_minutes = 240
 
         # Construct new last name directly from BASE_LAST_NAME in .env
         base_last_name = (settings.base_last_name if settings.base_last_name is not None else "").strip()
@@ -191,7 +188,9 @@ class StatusManager:
 
         if state == "free":
             return True, "Status reset to Free (normal state restored)."
-        return True, f"Status updated to {label} {emoji} for {duration_minutes}m."
+        if duration_minutes:
+            return True, f"Status updated to {label} {emoji} for {duration_minutes}m."
+        return True, f"Status updated to {label} {emoji}."
 
     def _schedule_timer(self, client: TelegramClient, delay_seconds: float):
         async def timer_job():
