@@ -121,6 +121,16 @@ class StatusManager:
         if not config:
             return False, f"Unknown status: {command_name}"
 
+        # Debounce check to protect against Telegram FLOOD_WAIT
+        now_ts = asyncio.get_event_loop().time()
+        cooldown = 15.0
+        elapsed = now_ts - self._last_update_time
+        if elapsed < cooldown and self._last_update_time > 0:
+            remaining = max(1, int(cooldown - elapsed))
+            return False, f"Please wait {remaining}s before changing status again (Telegram flood protection)."
+
+        self._last_update_time = now_ts
+
         # Cancel any active countdown task
         if self._current_task and not self._current_task.done():
             self._current_task.cancel()
