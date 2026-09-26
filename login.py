@@ -1,3 +1,4 @@
+import os
 import asyncio
 import qrcode
 from telethon import TelegramClient
@@ -5,9 +6,22 @@ from telethon.errors import SessionPasswordNeededError, PasswordHashInvalidError
 from src.userbot.core.config import settings
 
 async def login():
-    # Initialize the client with a session name
-    client = TelegramClient('session_qr', settings.api_id, settings.api_hash)
-    await client.connect()
+    session_name = 'session_qr'
+    session_file = f'{session_name}.session'
+
+    client = TelegramClient(session_name, settings.api_id, settings.api_hash)
+    try:
+        await client.connect()
+    except Exception as e:
+        if "AuthKeyDuplicatedError" in type(e).__name__:
+            print("⚠️ Detected invalidated session key. Resetting session file...")
+            await client.disconnect()
+            if os.path.exists(session_file):
+                os.remove(session_file)
+            client = TelegramClient(session_name, settings.api_id, settings.api_hash)
+            await client.connect()
+        else:
+            raise
 
     if await client.is_user_authorized():
         print("Already logged in.")

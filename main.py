@@ -9,7 +9,18 @@ from src.userbot.services.status_manager import status_manager
 
 async def main():
     client = TelegramClient('session_qr', settings.api_id, settings.api_hash)
-    await client.connect()
+    try:
+        await client.connect()
+    except Exception as e:
+        if "AuthKeyDuplicatedError" in type(e).__name__:
+            print("⚠️ Session invalidated. Resetting session_qr.session...")
+            await client.disconnect()
+            if os.path.exists("session_qr.session"):
+                os.remove("session_qr.session")
+            client = TelegramClient('session_qr', settings.api_id, settings.api_hash)
+            await client.connect()
+        else:
+            raise
 
     # Check if the user is logged in
     if not await client.is_user_authorized():
